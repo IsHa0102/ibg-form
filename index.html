@@ -15,7 +15,6 @@
     --sage-light: #EEF4EE;
     --sage-dark: #4A7150;
     --terracotta: #C4704A;
-    --terracotta-light: #F9EDE6;
     --text-dark: #2C2416;
     --text-mid: #6B5D4F;
     --text-light: #A89880;
@@ -36,7 +35,6 @@
     overflow-x: hidden;
   }
 
-  /* background blobs */
   body::before {
     content: '';
     position: fixed;
@@ -47,6 +45,7 @@
     z-index: 0;
     pointer-events: none;
   }
+
   body::after {
     content: '';
     position: fixed;
@@ -65,7 +64,6 @@
     z-index: 1;
   }
 
-  /* header */
   .header {
     text-align: center;
     margin-bottom: 40px;
@@ -90,8 +88,6 @@
     display: flex; align-items: center; justify-content: center;
   }
 
-  .logo-dot svg { width: 12px; height: 12px; }
-
   .logo-badge span {
     font-size: 12px;
     font-weight: 500;
@@ -108,10 +104,7 @@
     margin-bottom: 12px;
   }
 
-  h1 em {
-    font-style: italic;
-    color: var(--sage-dark);
-  }
+  h1 em { font-style: italic; color: var(--sage-dark); }
 
   .subtitle {
     font-size: 15px;
@@ -122,7 +115,6 @@
     margin: 0 auto;
   }
 
-  /* card */
   .card {
     background: var(--warm-white);
     border: 1px solid var(--border);
@@ -132,7 +124,6 @@
     animation: fadeUp 0.6s ease 0.15s both;
   }
 
-  /* progress dots */
   .progress {
     display: flex;
     gap: 6px;
@@ -150,10 +141,7 @@
   .progress-dot.active { background: var(--sage); }
   .progress-dot.done { background: var(--sage-dark); }
 
-  /* field groups */
-  .field {
-    margin-bottom: 20px;
-  }
+  .field { margin-bottom: 20px; }
 
   label {
     display: block;
@@ -164,15 +152,11 @@
     letter-spacing: 0.03em;
   }
 
-  label .required {
-    color: var(--terracotta);
-    margin-left: 2px;
-  }
+  label .required { color: var(--terracotta); margin-left: 2px; }
 
   input[type="text"],
   input[type="tel"],
-  input[type="date"],
-  select {
+  input[type="date"] {
     width: 100%;
     padding: 13px 16px;
     border: 1.5px solid var(--border);
@@ -187,16 +171,13 @@
     -webkit-appearance: none;
   }
 
-  input:focus, select:focus {
+  input:focus {
     border-color: var(--sage);
     background: white;
     box-shadow: 0 0 0 3px rgba(122, 158, 126, 0.12);
   }
 
-  input.error, select.error {
-    border-color: var(--error);
-    box-shadow: 0 0 0 3px rgba(196, 80, 74, 0.1);
-  }
+  input.error { border-color: var(--error); }
 
   .error-msg {
     font-size: 12px;
@@ -207,18 +188,16 @@
 
   .error-msg.show { display: block; }
 
-  /* stage selector */
-  .stage-selector {
+  .stage-selector, .lang-selector {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
   }
 
-  .stage-option {
-    position: relative;
-  }
+  .stage-option, .lang-option { position: relative; }
 
-  .stage-option input[type="radio"] {
+  .stage-option input[type="radio"],
+  .lang-option input[type="radio"] {
     position: absolute;
     opacity: 0;
     width: 0; height: 0;
@@ -242,38 +221,14 @@
     font-weight: 400;
   }
 
-  .stage-option label .emoji {
-    font-size: 28px;
-    line-height: 1;
-  }
+  .stage-option label .emoji { font-size: 28px; line-height: 1; }
 
-  .stage-option input:checked + label {
+  .stage-option input:checked + label,
+  .lang-option input:checked + label {
     border-color: var(--sage);
     background: var(--sage-light);
     color: var(--sage-dark);
     box-shadow: 0 0 0 3px rgba(122, 158, 126, 0.12);
-  }
-
-  .stage-option label:hover {
-    border-color: var(--sage);
-    background: var(--sage-light);
-  }
-
-  /* language selector */
-  .lang-selector {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
-  .lang-option {
-    position: relative;
-  }
-
-  .lang-option input[type="radio"] {
-    position: absolute;
-    opacity: 0;
-    width: 0; height: 0;
   }
 
   .lang-option label {
@@ -293,19 +248,6 @@
     font-weight: 400;
   }
 
-  .lang-option input:checked + label {
-    border-color: var(--sage);
-    background: var(--sage-light);
-    color: var(--sage-dark);
-    box-shadow: 0 0 0 3px rgba(122, 158, 126, 0.12);
-  }
-
-  .lang-option label:hover {
-    border-color: var(--sage);
-    background: var(--sage-light);
-  }
-
-  /* date field conditional */
   .date-field {
     overflow: hidden;
     max-height: 0;
@@ -320,7 +262,6 @@
     margin-bottom: 20px;
   }
 
-  /* hint text */
   .hint {
     font-size: 12px;
     color: var(--text-light);
@@ -328,14 +269,12 @@
     line-height: 1.5;
   }
 
-  /* divider */
   .divider {
     height: 1px;
     background: var(--border);
     margin: 24px 0;
   }
 
-  /* submit button */
   .btn-submit {
     width: 100%;
     padding: 16px;
@@ -348,8 +287,6 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
     letter-spacing: 0.02em;
   }
 
@@ -361,26 +298,6 @@
 
   .btn-submit:active { transform: translateY(0); }
 
-  .btn-submit:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-    transform: none;
-  }
-
-  .btn-submit .spinner {
-    display: none;
-    width: 18px; height: 18px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: white;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    margin: 0 auto;
-  }
-
-  .btn-submit.loading .btn-text { display: none; }
-  .btn-submit.loading .spinner { display: block; }
-
-  /* privacy note */
   .privacy {
     text-align: center;
     margin-top: 16px;
@@ -390,22 +307,14 @@
     animation: fadeUp 0.6s ease 0.3s both;
   }
 
-  .privacy svg {
-    width: 12px; height: 12px;
-    vertical-align: middle;
-    margin-right: 3px;
-    color: var(--sage);
-  }
-
-  /* success state */
-  .success-screen {
+  /* success page */
+  .success-page {
     display: none;
     text-align: center;
     padding: 20px 0;
   }
 
-  .success-screen.show { display: block; }
-  .card.success-mode { padding: 48px 32px; }
+  .success-page.show { display: block; }
 
   .success-icon {
     width: 72px; height: 72px;
@@ -421,31 +330,23 @@
     color: var(--sage-dark);
   }
 
-  .success-screen h2 {
+  .success-page h2 {
     font-family: 'DM Serif Display', serif;
     font-size: 26px;
     color: var(--text-dark);
     margin-bottom: 10px;
   }
 
-  .success-screen p {
+  .success-page p {
     font-size: 15px;
     color: var(--text-mid);
     line-height: 1.6;
     font-weight: 300;
   }
 
-  .form-content { transition: opacity 0.2s; }
-  .form-content.hidden { display: none; }
-
-  /* animations */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(16px); }
     to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes spin {
-    to { transform: rotate(360deg); }
   }
 
   @keyframes popIn {
@@ -453,7 +354,6 @@
     to { opacity: 1; transform: scale(1); }
   }
 
-  /* mobile */
   @media (max-width: 480px) {
     body { padding: 24px 16px 48px; }
     .card { padding: 28px 20px; border-radius: 16px; }
@@ -468,7 +368,7 @@
   <div class="header">
     <div class="logo-badge">
       <div class="logo-dot">
-        <svg viewBox="0 0 12 12" fill="none">
+        <svg viewBox="0 0 12 12" fill="none" width="12" height="12">
           <circle cx="6" cy="6" r="4" fill="white"/>
           <circle cx="6" cy="6" r="2" fill="#7A9E7E"/>
         </svg>
@@ -481,16 +381,26 @@
 
   <div class="card" id="mainCard">
 
-    <!-- progress -->
-    <div class="progress" id="progressBar">
-      <div class="progress-dot active" id="dot1"></div>
-      <div class="progress-dot" id="dot2"></div>
-      <div class="progress-dot" id="dot3"></div>
-      <div class="progress-dot" id="dot4"></div>
-      <div class="progress-dot" id="dot5"></div>
+    <!-- success screen (shown after redirect back) -->
+    <div class="success-page" id="successPage">
+      <div class="success-icon">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 16l7 7L26 9"/>
+        </svg>
+      </div>
+      <h2>You're enrolled! 🎉</h2>
+      <p>We'll send your first reminder to WhatsApp shortly.<br>Reply <strong>STOP</strong> anytime to unsubscribe.</p>
     </div>
 
-    <div class="form-content" id="formContent">
+    <!-- form -->
+    <div id="formSection">
+      <div class="progress" id="progressBar">
+        <div class="progress-dot active" id="dot1"></div>
+        <div class="progress-dot" id="dot2"></div>
+        <div class="progress-dot" id="dot3"></div>
+        <div class="progress-dot" id="dot4"></div>
+        <div class="progress-dot" id="dot5"></div>
+      </div>
 
       <!-- Name -->
       <div class="field">
@@ -529,17 +439,17 @@
         <div class="error-msg" id="stageError">Please select one</div>
       </div>
 
-      <!-- LMP Date (pregnant) -->
+      <!-- LMP Date -->
       <div class="date-field" id="lmpField">
         <div class="field" style="margin-bottom:0">
           <label for="lmpDate">First day of last period <span class="required">*</span></label>
           <input type="date" id="lmpDate"/>
-          <div class="hint">This helps us calculate your pregnancy week</div>
+          <div class="hint">Helps us calculate your pregnancy week</div>
           <div class="error-msg" id="lmpError">Please select a date</div>
         </div>
       </div>
 
-      <!-- Baby DOB (parent) -->
+      <!-- Baby DOB -->
       <div class="date-field" id="dobField">
         <div class="field" style="margin-bottom:0">
           <label for="babyDob">Baby's date of birth <span class="required">*</span></label>
@@ -566,40 +476,39 @@
 
       <div class="divider"></div>
 
-      <button class="btn-submit" id="submitBtn" onclick="handleSubmit()">
-        <span class="btn-text">Sign me up — it's free</span>
-        <div class="spinner"></div>
+      <button class="btn-submit" onclick="handleSubmit()">
+        Sign me up — it's free
       </button>
 
     </div>
-
-    <!-- success -->
-    <div class="success-screen" id="successScreen">
-      <div class="success-icon">
-        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M6 16l7 7L26 9"/>
-        </svg>
-      </div>
-      <h2>You're enrolled! 🎉</h2>
-      <p>We'll send your first reminder to WhatsApp shortly. You can opt out anytime by replying <strong>STOP</strong>.</p>
-    </div>
-
   </div>
 
   <p class="privacy">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-      <rect x="3" y="7" width="10" height="7" rx="1.5"/>
-      <path d="M5.5 7V5a2.5 2.5 0 015 0v2"/>
-    </svg>
-    Your data is private and never shared. Unsubscribe anytime.
+    🔒 Your data is private and never shared. Unsubscribe anytime.
   </p>
 
 </div>
 
-<script>
-  const WEBHOOK_URL = 'https://ishanubo.app.n8n.cloud/webhook/ibg-optin';
+<!-- hidden form that does the actual POST -->
+<form id="hiddenForm" method="POST" action="https://ishanubo.app.n8n.cloud/webhook/ibg-optin" style="display:none">
+  <input type="hidden" name="name" id="h_name"/>
+  <input type="hidden" name="phone" id="h_phone"/>
+  <input type="hidden" name="stage" id="h_stage"/>
+  <input type="hidden" name="lmp_date" id="h_lmp_date"/>
+  <input type="hidden" name="baby_dob" id="h_baby_dob"/>
+  <input type="hidden" name="language" id="h_language"/>
+  <input type="hidden" name="redirect" value="https://ibg-form.vercel.app/?success=1"/>
+</form>
 
-  // show/hide date fields based on stage
+<script>
+  // show success screen if redirected back with ?success=1
+  if (window.location.search.includes('success=1')) {
+    document.getElementById('formSection').style.display = 'none';
+    document.getElementById('successPage').classList.add('show');
+    document.getElementById('progressBar') && (document.getElementById('progressBar').style.display = 'none');
+  }
+
+  // stage toggle
   document.querySelectorAll('input[name="stage"]').forEach(radio => {
     radio.addEventListener('change', function() {
       const lmpField = document.getElementById('lmpField');
@@ -618,137 +527,84 @@
 
   // progress bar
   function updateProgress() {
-    const fields = [
+    const stage = document.querySelector('input[name="stage"]:checked');
+    const dateVal = stage
+      ? (stage.value === 'Pregnant' ? document.getElementById('lmpDate').value : document.getElementById('babyDob').value)
+      : '';
+    const filled = [
       document.getElementById('name').value.trim(),
       document.getElementById('phone').value.trim(),
-      document.querySelector('input[name="stage"]:checked'),
-      getDateValue(),
-      document.querySelector('input[name="language"]:checked')
-    ];
-    const filled = fields.filter(Boolean).length;
-    const dots = document.querySelectorAll('.progress-dot');
-    dots.forEach((dot, i) => {
+      stage ? stage.value : '',
+      dateVal,
+      document.querySelector('input[name="language"]:checked') ? 'ok' : ''
+    ].filter(Boolean).length;
+
+    document.querySelectorAll('.progress-dot').forEach((dot, i) => {
       dot.classList.remove('active', 'done');
       if (i < filled - 1) dot.classList.add('done');
       else if (i === filled - 1) dot.classList.add('active');
     });
   }
 
-  function getDateValue() {
-    const stage = document.querySelector('input[name="stage"]:checked');
-    if (!stage) return '';
-    if (stage.value === 'Pregnant') return document.getElementById('lmpDate').value;
-    return document.getElementById('babyDob').value;
-  }
-
   document.getElementById('name').addEventListener('input', updateProgress);
-  document.getElementById('phone').addEventListener('input', updateProgress);
-  document.getElementById('lmpDate').addEventListener('change', updateProgress);
-  document.getElementById('babyDob').addEventListener('change', updateProgress);
-
-  // only allow numbers in phone
   document.getElementById('phone').addEventListener('input', function() {
     this.value = this.value.replace(/\D/g, '');
+    updateProgress();
   });
+  document.getElementById('lmpDate').addEventListener('change', updateProgress);
+  document.getElementById('babyDob').addEventListener('change', updateProgress);
 
   // validation
   function validate() {
     let valid = true;
 
     const name = document.getElementById('name').value.trim();
-    if (!name) {
-      document.getElementById('nameError').classList.add('show');
-      document.getElementById('name').classList.add('error');
-      valid = false;
-    } else {
-      document.getElementById('nameError').classList.remove('show');
-      document.getElementById('name').classList.remove('error');
-    }
+    const nameErr = document.getElementById('nameError');
+    if (!name) { nameErr.classList.add('show'); document.getElementById('name').classList.add('error'); valid = false; }
+    else { nameErr.classList.remove('show'); document.getElementById('name').classList.remove('error'); }
 
     const phone = document.getElementById('phone').value.trim();
-    if (!phone || phone.length !== 10) {
-      document.getElementById('phoneError').classList.add('show');
-      document.getElementById('phone').classList.add('error');
-      valid = false;
-    } else {
-      document.getElementById('phoneError').classList.remove('show');
-      document.getElementById('phone').classList.remove('error');
-    }
+    const phoneErr = document.getElementById('phoneError');
+    if (!phone || phone.length !== 10) { phoneErr.classList.add('show'); document.getElementById('phone').classList.add('error'); valid = false; }
+    else { phoneErr.classList.remove('show'); document.getElementById('phone').classList.remove('error'); }
 
     const stage = document.querySelector('input[name="stage"]:checked');
-    if (!stage) {
-      document.getElementById('stageError').classList.add('show');
-      valid = false;
-    } else {
-      document.getElementById('stageError').classList.remove('show');
-    }
+    if (!stage) { document.getElementById('stageError').classList.add('show'); valid = false; }
+    else { document.getElementById('stageError').classList.remove('show'); }
 
     if (stage && stage.value === 'Pregnant') {
       const lmp = document.getElementById('lmpDate').value;
-      if (!lmp) {
-        document.getElementById('lmpError').classList.add('show');
-        document.getElementById('lmpDate').classList.add('error');
-        valid = false;
-      } else {
-        document.getElementById('lmpError').classList.remove('show');
-        document.getElementById('lmpDate').classList.remove('error');
-      }
+      const lmpErr = document.getElementById('lmpError');
+      if (!lmp) { lmpErr.classList.add('show'); document.getElementById('lmpDate').classList.add('error'); valid = false; }
+      else { lmpErr.classList.remove('show'); document.getElementById('lmpDate').classList.remove('error'); }
     }
 
     if (stage && stage.value === 'Parent') {
       const dob = document.getElementById('babyDob').value;
-      if (!dob) {
-        document.getElementById('dobError').classList.add('show');
-        document.getElementById('babyDob').classList.add('error');
-        valid = false;
-      } else {
-        document.getElementById('dobError').classList.remove('show');
-        document.getElementById('babyDob').classList.remove('error');
-      }
+      const dobErr = document.getElementById('dobError');
+      if (!dob) { dobErr.classList.add('show'); document.getElementById('babyDob').classList.add('error'); valid = false; }
+      else { dobErr.classList.remove('show'); document.getElementById('babyDob').classList.remove('error'); }
     }
 
     return valid;
   }
 
-  async function handleSubmit() {
+  function handleSubmit() {
     if (!validate()) return;
-
-    const btn = document.getElementById('submitBtn');
-    btn.classList.add('loading');
-    btn.disabled = true;
 
     const stage = document.querySelector('input[name="stage"]:checked').value;
     const language = document.querySelector('input[name="language"]:checked').value;
 
-    const payload = {
-      name: document.getElementById('name').value.trim(),
-      phone: document.getElementById('phone').value.trim(),
-      stage: stage,
-      lmp_date: stage === 'Pregnant' ? document.getElementById('lmpDate').value : '',
-      baby_dob: stage === 'Parent' ? document.getElementById('babyDob').value : '',
-      language: language
-    };
+    // fill hidden form
+    document.getElementById('h_name').value = document.getElementById('name').value.trim();
+    document.getElementById('h_phone').value = document.getElementById('phone').value.trim();
+    document.getElementById('h_stage').value = stage;
+    document.getElementById('h_lmp_date').value = stage === 'Pregnant' ? document.getElementById('lmpDate').value : '';
+    document.getElementById('h_baby_dob').value = stage === 'Parent' ? document.getElementById('babyDob').value : '';
+    document.getElementById('h_language').value = language;
 
-    try {
-      await fetch(WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      // show success regardless (webhook may return CORS issue in browser but still processes)
-      document.getElementById('formContent').classList.add('hidden');
-      document.getElementById('successScreen').classList.add('show');
-      document.getElementById('mainCard').classList.add('success-mode');
-      document.querySelector('.progress').style.display = 'none';
-
-    } catch (err) {
-      // still show success — n8n receives the request even if CORS blocks the response
-      document.getElementById('formContent').classList.add('hidden');
-      document.getElementById('successScreen').classList.add('show');
-      document.getElementById('mainCard').classList.add('success-mode');
-      document.querySelector('.progress').style.display = 'none';
-    }
+    // submit hidden form — bypasses CORS entirely
+    document.getElementById('hiddenForm').submit();
   }
 </script>
 
