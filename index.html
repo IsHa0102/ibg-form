@@ -288,6 +288,7 @@
     cursor: pointer;
     transition: all 0.2s;
     letter-spacing: 0.02em;
+    position: relative;
   }
 
   .btn-submit:hover {
@@ -296,7 +297,24 @@
     box-shadow: 0 6px 20px rgba(74, 113, 80, 0.3);
   }
 
-  .btn-submit:active { transform: translateY(0); }
+  .btn-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-submit .spinner {
+    display: none;
+    width: 20px; height: 20px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto;
+  }
+
+  .btn-submit.loading .btn-text { display: none; }
+  .btn-submit.loading .spinner { display: block; }
 
   .privacy {
     text-align: center;
@@ -307,14 +325,14 @@
     animation: fadeUp 0.6s ease 0.3s both;
   }
 
-  /* success page */
-  .success-page {
+  /* success state */
+  .success-screen {
     display: none;
     text-align: center;
-    padding: 20px 0;
+    padding: 12px 0;
   }
 
-  .success-page.show { display: block; }
+  .success-screen.show { display: block; }
 
   .success-icon {
     width: 72px; height: 72px;
@@ -330,24 +348,29 @@
     color: var(--sage-dark);
   }
 
-  .success-page h2 {
+  .success-screen h2 {
     font-family: 'DM Serif Display', serif;
     font-size: 26px;
     color: var(--text-dark);
     margin-bottom: 10px;
   }
 
-  .success-page p {
+  .success-screen p {
     font-size: 15px;
     color: var(--text-mid);
     line-height: 1.6;
     font-weight: 300;
   }
 
+  .form-content.hidden { display: none; }
+  .progress.hidden { display: none; }
+
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(16px); }
     to { opacity: 1; transform: translateY(0); }
   }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
 
   @keyframes popIn {
     from { opacity: 0; transform: scale(0.5); }
@@ -362,6 +385,9 @@
 </style>
 </head>
 <body>
+
+<!-- invisible iframe — form submits into this, browser never leaves the page -->
+<iframe name="hidden_iframe" id="hidden_iframe" style="display:none"></iframe>
 
 <div class="container">
 
@@ -381,8 +407,16 @@
 
   <div class="card" id="mainCard">
 
-    <!-- success screen (shown after redirect back) -->
-    <div class="success-page" id="successPage">
+    <div class="progress" id="progressBar">
+      <div class="progress-dot active"></div>
+      <div class="progress-dot"></div>
+      <div class="progress-dot"></div>
+      <div class="progress-dot"></div>
+      <div class="progress-dot"></div>
+    </div>
+
+    <!-- success screen -->
+    <div class="success-screen" id="successScreen">
       <div class="success-icon">
         <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M6 16l7 7L26 9"/>
@@ -392,27 +426,24 @@
       <p>We'll send your first reminder to WhatsApp shortly.<br>Reply <strong>STOP</strong> anytime to unsubscribe.</p>
     </div>
 
-    <!-- form -->
-    <div id="formSection">
-      <div class="progress" id="progressBar">
-        <div class="progress-dot active" id="dot1"></div>
-        <div class="progress-dot" id="dot2"></div>
-        <div class="progress-dot" id="dot3"></div>
-        <div class="progress-dot" id="dot4"></div>
-        <div class="progress-dot" id="dot5"></div>
-      </div>
+    <!-- form submits into the hidden iframe -->
+    <form id="enrollForm"
+          action="https://ishanubo.app.n8n.cloud/webhook/ibg-optin"
+          method="POST"
+          target="hidden_iframe"
+          class="form-content">
 
       <!-- Name -->
       <div class="field">
         <label for="name">Your name <span class="required">*</span></label>
-        <input type="text" id="name" placeholder="e.g. Priya Sharma" autocomplete="given-name"/>
+        <input type="text" id="name" name="name" placeholder="e.g. Priya Sharma" autocomplete="given-name"/>
         <div class="error-msg" id="nameError">Please enter your name</div>
       </div>
 
       <!-- Phone -->
       <div class="field">
         <label for="phone">WhatsApp number <span class="required">*</span></label>
-        <input type="tel" id="phone" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric"/>
+        <input type="tel" id="phone" name="phone" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric"/>
         <div class="hint">We'll send reminders to this number</div>
         <div class="error-msg" id="phoneError">Please enter a valid 10-digit number</div>
       </div>
@@ -443,7 +474,7 @@
       <div class="date-field" id="lmpField">
         <div class="field" style="margin-bottom:0">
           <label for="lmpDate">First day of last period <span class="required">*</span></label>
-          <input type="date" id="lmpDate"/>
+          <input type="date" id="lmpDate" name="lmp_date"/>
           <div class="hint">Helps us calculate your pregnancy week</div>
           <div class="error-msg" id="lmpError">Please select a date</div>
         </div>
@@ -453,7 +484,7 @@
       <div class="date-field" id="dobField">
         <div class="field" style="margin-bottom:0">
           <label for="babyDob">Baby's date of birth <span class="required">*</span></label>
-          <input type="date" id="babyDob"/>
+          <input type="date" id="babyDob" name="baby_dob"/>
           <div class="hint">Used to schedule vaccination reminders</div>
           <div class="error-msg" id="dobError">Please select a date</div>
         </div>
@@ -476,11 +507,12 @@
 
       <div class="divider"></div>
 
-      <button class="btn-submit" onclick="handleSubmit()">
-        Sign me up — it's free
+      <button type="button" class="btn-submit" id="submitBtn" onclick="handleSubmit()">
+        <span class="btn-text">Sign me up — it's free</span>
+        <div class="spinner"></div>
       </button>
 
-    </div>
+    </form>
   </div>
 
   <p class="privacy">
@@ -489,25 +521,7 @@
 
 </div>
 
-<!-- hidden form that does the actual POST -->
-<form id="hiddenForm" method="POST" action="https://ishanubo.app.n8n.cloud/webhook/ibg-optin" style="display:none">
-  <input type="hidden" name="name" id="h_name"/>
-  <input type="hidden" name="phone" id="h_phone"/>
-  <input type="hidden" name="stage" id="h_stage"/>
-  <input type="hidden" name="lmp_date" id="h_lmp_date"/>
-  <input type="hidden" name="baby_dob" id="h_baby_dob"/>
-  <input type="hidden" name="language" id="h_language"/>
-  <input type="hidden" name="redirect" value="https://ibg-form.vercel.app/?success=1"/>
-</form>
-
 <script>
-  // show success screen if redirected back with ?success=1
-  if (window.location.search.includes('success=1')) {
-    document.getElementById('formSection').style.display = 'none';
-    document.getElementById('successPage').classList.add('show');
-    document.getElementById('progressBar') && (document.getElementById('progressBar').style.display = 'none');
-  }
-
   // stage toggle
   document.querySelectorAll('input[name="stage"]').forEach(radio => {
     radio.addEventListener('change', function() {
@@ -536,7 +550,7 @@
       document.getElementById('phone').value.trim(),
       stage ? stage.value : '',
       dateVal,
-      document.querySelector('input[name="language"]:checked') ? 'ok' : ''
+      'ok' // language always has a default
     ].filter(Boolean).length;
 
     document.querySelectorAll('.progress-dot').forEach((dot, i) => {
@@ -559,31 +573,55 @@
     let valid = true;
 
     const name = document.getElementById('name').value.trim();
-    const nameErr = document.getElementById('nameError');
-    if (!name) { nameErr.classList.add('show'); document.getElementById('name').classList.add('error'); valid = false; }
-    else { nameErr.classList.remove('show'); document.getElementById('name').classList.remove('error'); }
+    if (!name) {
+      document.getElementById('nameError').classList.add('show');
+      document.getElementById('name').classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('nameError').classList.remove('show');
+      document.getElementById('name').classList.remove('error');
+    }
 
     const phone = document.getElementById('phone').value.trim();
-    const phoneErr = document.getElementById('phoneError');
-    if (!phone || phone.length !== 10) { phoneErr.classList.add('show'); document.getElementById('phone').classList.add('error'); valid = false; }
-    else { phoneErr.classList.remove('show'); document.getElementById('phone').classList.remove('error'); }
+    if (!phone || phone.length !== 10) {
+      document.getElementById('phoneError').classList.add('show');
+      document.getElementById('phone').classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('phoneError').classList.remove('show');
+      document.getElementById('phone').classList.remove('error');
+    }
 
     const stage = document.querySelector('input[name="stage"]:checked');
-    if (!stage) { document.getElementById('stageError').classList.add('show'); valid = false; }
-    else { document.getElementById('stageError').classList.remove('show'); }
+    if (!stage) {
+      document.getElementById('stageError').classList.add('show');
+      valid = false;
+    } else {
+      document.getElementById('stageError').classList.remove('show');
+    }
 
     if (stage && stage.value === 'Pregnant') {
       const lmp = document.getElementById('lmpDate').value;
-      const lmpErr = document.getElementById('lmpError');
-      if (!lmp) { lmpErr.classList.add('show'); document.getElementById('lmpDate').classList.add('error'); valid = false; }
-      else { lmpErr.classList.remove('show'); document.getElementById('lmpDate').classList.remove('error'); }
+      if (!lmp) {
+        document.getElementById('lmpError').classList.add('show');
+        document.getElementById('lmpDate').classList.add('error');
+        valid = false;
+      } else {
+        document.getElementById('lmpError').classList.remove('show');
+        document.getElementById('lmpDate').classList.remove('error');
+      }
     }
 
     if (stage && stage.value === 'Parent') {
       const dob = document.getElementById('babyDob').value;
-      const dobErr = document.getElementById('dobError');
-      if (!dob) { dobErr.classList.add('show'); document.getElementById('babyDob').classList.add('error'); valid = false; }
-      else { dobErr.classList.remove('show'); document.getElementById('babyDob').classList.remove('error'); }
+      if (!dob) {
+        document.getElementById('dobError').classList.add('show');
+        document.getElementById('babyDob').classList.add('error');
+        valid = false;
+      } else {
+        document.getElementById('dobError').classList.remove('show');
+        document.getElementById('babyDob').classList.remove('error');
+      }
     }
 
     return valid;
@@ -592,19 +630,19 @@
   function handleSubmit() {
     if (!validate()) return;
 
-    const stage = document.querySelector('input[name="stage"]:checked').value;
-    const language = document.querySelector('input[name="language"]:checked').value;
+    const btn = document.getElementById('submitBtn');
+    btn.classList.add('loading');
+    btn.disabled = true;
 
-    // fill hidden form
-    document.getElementById('h_name').value = document.getElementById('name').value.trim();
-    document.getElementById('h_phone').value = document.getElementById('phone').value.trim();
-    document.getElementById('h_stage').value = stage;
-    document.getElementById('h_lmp_date').value = stage === 'Pregnant' ? document.getElementById('lmpDate').value : '';
-    document.getElementById('h_baby_dob').value = stage === 'Parent' ? document.getElementById('babyDob').value : '';
-    document.getElementById('h_language').value = language;
+    // submit form into hidden iframe — browser stays on this page
+    document.getElementById('enrollForm').submit();
 
-    // submit hidden form — bypasses CORS entirely
-    document.getElementById('hiddenForm').submit();
+    // wait 1.5s then show success screen
+    setTimeout(() => {
+      document.getElementById('enrollForm').classList.add('hidden');
+      document.getElementById('progressBar').classList.add('hidden');
+      document.getElementById('successScreen').classList.add('show');
+    }, 1500);
   }
 </script>
 
