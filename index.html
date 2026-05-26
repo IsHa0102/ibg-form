@@ -634,16 +634,14 @@
     btn.classList.add('loading');
     btn.disabled = true;
 
-    // submit form into hidden iframe — browser stays on this page
+    // submit into hidden iframe
     document.getElementById('enrollForm').submit();
 
-    // wait 1.5s then show success screen
-    setTimeout(() => {
-      document.getElementById('enrollForm').classList.add('hidden');
-      document.getElementById('progressBar').classList.add('hidden');
-      document.getElementById('successScreen').classList.add('show');
-    }, 1500);
-  }
+    // show success immediately — don't wait for iframe response
+    document.getElementById('enrollForm').style.display = 'none';
+    document.getElementById('progressBar').style.display = 'none';
+    document.getElementById('successScreen').classList.add('show');
+}
 </script>
 
 </body>
